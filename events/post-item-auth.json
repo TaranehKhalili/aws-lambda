@@ -1,0 +1,16 @@
+{
+    "resource": "/items",
+    "path": "/items",
+    "httpMethod": "POST",
+    "headers": {"Content-Type": "application/json"},
+    "requestContext": {
+      "authorizer": {
+        "claims": {
+          "sub": "local-user",
+          "cognito:groups": "admins,writers"
+        }
+      }
+    },
+    "body": "{\"id\":\"abc123\",\"data\":{\"msg\":\"hello\"}}",
+    "isBase64Encoded": false
+  }

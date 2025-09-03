@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Courses API (list/add) with Lambda + DynamoDB
+
+Globals:
+  Function:
+    Runtime: python3.13
+    Timeout: 10
+    MemorySize: 256
+    Environment:
+      Variables:
+        TABLE_NAME: !Ref CoursesTable
+
+Resources:
+  CoursesApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      Cors:
+        AllowOrigin: "'*'"
+        AllowHeaders: "'Authorization,Content-Type'"
+        AllowMethods: "'GET,POST,OPTIONS'"
+
+  CoursesFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: hello_world/
+      Handler: app.lambda_handler
+      Events:
+        ListCourses:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CoursesApi
+            Path: /courses
+            Method: GET
+        AddCourse:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CoursesApi
+            Path: /courses
+            Method: POST
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref CoursesTable
+
+  CoursesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "${AWS::StackName}-courses"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: courseId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: courseId
+          KeyType: HASH

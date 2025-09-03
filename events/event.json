@@ -1,0 +1,16 @@
+{
+  "resource": "/hello",
+  "path": "/hello",
+  "httpMethod": "GET",
+  "headers": {
+    "Accept": "application/json"
+  },
+  "requestContext": {
+    "authorizer": {
+      "claims": {
+        "sub": "local-user"
+      }
+    }
+  },
+  "isBase64Encoded": false
+}
